@@ -1,3 +1,9 @@
+use std::env::{self};
+
 fn main() {
-    println!("Hello, world!");
+    let args = env::args();
+    let params = replace::Params::new(args);
+    params.validate();
+
+    println!("{:?}", params);
 }
