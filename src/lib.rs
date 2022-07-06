@@ -2,7 +2,8 @@ use std::{env::Args, process};
 
 #[derive(Debug)]
 pub struct Params {
-    pub term: String,
+    pub search: String,
+    pub replace: String,
     pub input_file: String,
     pub output_file: String,
 }
@@ -13,14 +14,19 @@ impl Params {
         let args: Vec<String> = args.collect();
 
         let mut result = Params {
-            term: String::new(),
+            search: String::new(),
+            replace: String::new(),
             input_file: String::new(),
             output_file: String::new(),
         };
 
         for (i, arg) in args.iter().enumerate() {
             if arg == "-t" {
-                result.term = args.get(i + 1).unwrap_or(&String::new()).to_string();
+                result.search = args.get(i + 1).unwrap_or(&String::new()).to_string();
+            }
+
+            if arg == "-r" {
+                result.replace = args.get(i + 1).unwrap_or(&String::new()).to_string();
             }
 
             if arg == "-i" {
@@ -36,7 +42,7 @@ impl Params {
     }
 
     pub fn validate(&mut self) {
-        if self.term == "" {
+        if self.search == "" {
             println!("Please add a search term!");
             process::exit(1);
         }
@@ -50,4 +56,21 @@ impl Params {
             self.output_file = self.input_file.to_owned();
         }
     }
+}
+
+pub fn replace(in_file: String, search: &str, replace: &str) -> String {
+    let mut result = Vec::<String>::new();
+
+    for line in in_file.lines() {
+        let mut line: String = line.to_string();
+
+        if line.contains(search) {
+            line = line.replace(search, replace);
+        }
+
+        result.push(line);
+    }
+
+    let result = result.join("\n");
+    result
 }
