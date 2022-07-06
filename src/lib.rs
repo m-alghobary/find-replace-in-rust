@@ -9,16 +9,21 @@ pub struct Params {
 }
 
 impl Params {
-    pub fn new(mut args: Args) -> Self {
-        args.next();
-        let args: Vec<String> = args.collect();
-
-        let mut result = Params {
+    fn default() -> Self {
+        Params {
             search: String::new(),
             replace: String::new(),
             input_file: String::new(),
             output_file: String::new(),
-        };
+        }
+    }
+
+    pub fn new(mut args: Args) -> Self {
+        // forget about the first arg (its the path to our program)
+        args.next();
+
+        let args: Vec<String> = args.collect();
+        let mut result = Params::default();
 
         for (i, arg) in args.iter().enumerate() {
             if arg == "-t" {
