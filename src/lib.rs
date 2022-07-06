@@ -35,7 +35,7 @@ impl Params {
         result
     }
 
-    pub fn validate(&self) {
+    pub fn validate(&mut self) {
         if self.term == "" {
             println!("Please add a search term!");
             process::exit(1);
@@ -44,6 +44,10 @@ impl Params {
         if self.input_file == "" {
             println!("Please pass a file to use!");
             process::exit(1);
+        }
+
+        if self.output_file == "" {
+            self.output_file = self.input_file.to_owned();
         }
     }
 }
